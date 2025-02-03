@@ -29,6 +29,18 @@ public class AssignmentService {
     }
 
     public Assignment createAssignment(Assignment assignment) {
+        if (assignment.getUser() != null && assignment.getUser().getId() != null) {
+            User user = userRepository.findById(assignment.getUser().getId())
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + assignment.getUser().getId()));
+            assignment.setUser(user);
+        }
+
+        if (assignment.getCodeReviewer() != null && assignment.getCodeReviewer().getId() != null) {
+            User reviewer = userRepository.findById(assignment.getCodeReviewer().getId())
+                    .orElseThrow(() -> new RuntimeException("Reviewer not found with ID: " + assignment.getCodeReviewer().getId()));
+            assignment.setCodeReviewer(reviewer);
+        }
+
         return assignmentRepository.save(assignment);
     }
 
